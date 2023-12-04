@@ -46,12 +46,11 @@ def check_if_any_match_is_one_to_one(matches, chars, reverse=False):
 def find_first_number_in_line(line, max_distance, reverse):
     num = None
     for i in range(len(line)):
-        chars = line[i:i + max_distance]
+        chars = line[i:i + max_distance]  # trim
         if reverse:
-            chars = line[::-1][i:i + max_distance][::-1]  # reverse string, select, unreverse
+            chars = line[::-1][i:i + max_distance][::-1]  # reverse string, trim, unreverse
 
-        matches = get_matching_keys(chars)
-
+        # either is a number
         dict_reverse = {
             False: 0,
             True: -1
@@ -59,6 +58,8 @@ def find_first_number_in_line(line, max_distance, reverse):
         if chars[dict_reverse].isdigit():
             return chars[dict_reverse]
 
+        # or is a string
+        matches = get_matching_keys(chars)
         num = check_if_any_match_is_one_to_one(matches, chars, reverse)
         if str(num).isdigit():
             return num
@@ -72,7 +73,7 @@ def get_p2(lines):
 
     for line in lines:
         total_number = ''
-        for reverse in [False, True]:
+        for reverse in [False, True]:  # check both ways
             num = find_first_number_in_line(line, max_distance, reverse)
             total_number += str(num)
         total_sum += int(total_number)
