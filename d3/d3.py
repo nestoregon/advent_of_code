@@ -21,7 +21,7 @@ DIRECTIONS = [
 ]
 
 
-def is_symbol_adjacent(lines, x, y):
+def is_symbol_adjacent(lines, x, y) -> bool:
     for direction in DIRECTIONS:
         dx, dy = direction
         nx, ny = x + dx, y + dy
@@ -63,7 +63,7 @@ def run(lines):
             if point.isdigit():
                 adjacent_symbol = max(is_symbol_adjacent(lines, x, y), adjacent_symbol)
                 asterisc = max(get_asterisc_coordinates_if_found(lines, x, y), asterisc)
-                number += point
+                number += point  # make number bigger
                 continue
 
             # update scores
