@@ -1,3 +1,10 @@
+"""
+Classic situation where p1 is easy,
+- p2 has to be rethought. Difficult solution = difficult implementation
+
+Always find SIMPLEST algorithm first, then implement!
+"""
+
 with open("input.txt") as f:
     lines = f.readlines()
     lines = [line.strip() for line in lines]
