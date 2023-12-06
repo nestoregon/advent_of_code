@@ -12,7 +12,7 @@ def find_matching_numbers(score_card_data: str):
     my_numbers = {int(x.strip()) for x in my_numbers.split(' ')}  # yapf: disable
 
     # intersection of sets, find matching!
-    matching_numbers = winning_numbers.intersection(my_numbers)  
+    matching_numbers = winning_numbers.intersection(my_numbers)
     return matching_numbers
 
 
@@ -33,11 +33,12 @@ for line in input:
         range(score_card_number + 1, score_card_number + len(matching_numbers) + 1)
     )  # if score card = 1, and len(matching_numbers) = 3, then you win 2, 3, 4
 
-    # update score cards
-    if len(matching_numbers) == 0: score_cards[score_card_number] += 0
+    # update score p2
+    # you win as many score cards as many current cards you have
     for won_card in next_score_cards_won:
-        # you win as many score cards as many current cards you have
         score_cards[won_card] += score_cards[score_card_number]
+
+    if len(matching_numbers) == 0: score_cards[score_card_number] += 0  # ensure current exists
 
 score_p2 = sum(score_cards.values())
 
