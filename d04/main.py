@@ -5,34 +5,34 @@ with open("input.txt") as f:
     input = [line.strip() for line in lines]
 
 
-def get_score_card_number_and_matching_numbers(line):
-    """Formatting input."""
-    score_card_number, score_card_data = line.split(': ')
-    score_card_number = int(score_card_number.split(' ')[-1])
-
+def find_matching_numbers(score_card_data: str):
     score_card_data = score_card_data.strip().replace('  ', ' ')
     winning_numbers, my_numbers = score_card_data.split(' | ')
-
     winning_numbers = {int(x.strip()) for x in winning_numbers.split(' ')}  # yapf: disable
     my_numbers = {int(x.strip()) for x in my_numbers.split(' ')}  # yapf: disable
 
-    matching_numbers = winning_numbers.intersection(my_numbers)  # intersection sets
-
-    return matching_numbers, score_card_number
+    # intersection of sets, find matching!
+    matching_numbers = winning_numbers.intersection(my_numbers)  
+    return matching_numbers
 
 
 score_p1 = 0
 score_cards = defaultdict(lambda: 1)  # to keep track, default 1
 for line in input:
-    matching_numbers, score_card_number = get_score_card_number_and_matching_numbers(line)
+
+    score_card_number, score_card_data = line.split(': ')
+    score_card_number = int(score_card_number.split(' ')[-1])
+
+    matching_numbers = find_matching_numbers(score_card_data)
 
     # update score p1
     if len(matching_numbers) > 0:
-        score_p1 += 2**(len(matching_numbers) - 1)
+        score_p1 += 2**(len(matching_numbers) - 1)  # 2^0, 2^1, 2^2, ...
 
     next_score_cards_won = list(
         range(score_card_number + 1, score_card_number + len(matching_numbers) + 1)
-    )
+    )  # if score card = 1, and len(matching_numbers) = 3, then you win 2, 3, 4
+
     # update score cards
     if len(matching_numbers) == 0: score_cards[score_card_number] += 0
     for won_card in next_score_cards_won:
