@@ -1,3 +1,5 @@
+from typing import Tuple
+
 with open("input.txt") as f:
     lines = f.readlines()
     input = [line.strip() for line in lines]
@@ -32,16 +34,16 @@ def is_symbol_adjacent(lines, x, y):
     return False  # No special char found
 
 
-def is_asterisc_adjacent(lines, x, y):
+def get_asterisc_coordinates_if_found(lines, x, y) -> Tuple[int, int]:
     for direction in DIRECTIONS:
         dx, dy = direction
         nx, ny = x + dx, y + dy
 
         if 0 <= nx < len(lines[y]) and 0 <= ny < len(lines):  # in bounds
             if lines[ny][nx] == '*':  # special char found!
-                return f'{ny}-{nx}'  # jackpot
+                return (ny, nx)  # jackpot
 
-    return ''
+    return (-1, -1)
 
 
 def run(lines):
@@ -53,14 +55,14 @@ def run(lines):
         # reset
         number = ''
         adjacent_symbol = False
-        astherisc_location = ''
+        asterisc = (-1, -1)
 
         for x in range(len(lines[y])):
 
             point = lines[y][x]
             if point.isdigit():
                 adjacent_symbol = max(is_symbol_adjacent(lines, x, y), adjacent_symbol)
-                astherisc_location = max(is_asterisc_adjacent(lines, x, y), astherisc_location)
+                asterisc = max(get_asterisc_coordinates_if_found(lines, x, y), asterisc)
                 number += point
                 continue
 
@@ -69,26 +71,23 @@ def run(lines):
                 number = int(number)
                 if adjacent_symbol:
                     p1_sol += number
-                if len(astherisc_location) > 0:
-                    if astherisc_location not in p2_counter:
-                        p2_counter[astherisc_location] = number
-                    else:  # update solution if there's already 1 value
-                        p2_sol += (p2_counter[astherisc_location] * number)
+                if asterisc != (-1, -1):
+                    if asterisc not in p2_counter: p2_counter[asterisc] = number  # only 1 found
+                    else: p2_sol += (p2_counter[asterisc] * number)  # update score
 
             # reset
             number = ''
             adjacent_symbol = False
-            astherisc_location = ''
+            asterisc = (-1, -1)
 
         # update scores
         if len(number) > 0:
+            number = int(number)
             if adjacent_symbol:
-                p1_sol += int(number)
-            if len(astherisc_location) > 0:
-                if astherisc_location not in p2_counter:
-                    p2_counter[astherisc_location] = int(number)
-                else:  # update solution if there's already 1 value
-                    p2_sol += (p2_counter[astherisc_location] * int(number))
+                p1_sol += number
+            if asterisc != (-1, -1):
+                if asterisc not in p2_counter: p2_counter[asterisc] = number  # only 1 found
+                else: p2_sol += (p2_counter[asterisc] * number)  # update score
 
     return p1_sol, p2_sol
 
